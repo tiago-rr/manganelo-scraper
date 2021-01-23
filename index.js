@@ -322,7 +322,7 @@ class Scraper {
 			$(".container-chapter-reader")
 				.children()
 				.each((i, element) => {
-					tempPages.push(new Page(i, $(element).attr("src")));
+					tempPages.push(new Page(i + 1, $(element).attr("src")));
 				});
 
 			return tempPages;
