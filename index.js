@@ -1,6 +1,7 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 const Manga = require("./manga").Manga; //Custome Manga object;
+const Page = require("./page").Page;
 
 class Scraper {
 	//Cleaning up spaces in search. Return a string with all spaces replaced with '_'
@@ -309,6 +310,22 @@ class Scraper {
 			);
 
 			return manga;
+		});
+	}
+
+	getChapterPages(chapterUrl) {
+		return axios.get(chapterUrl).then((res) => {
+			let messyData = [];
+			const $ = cheerio.load(res.data);
+
+			let tempPages = [];
+			$(".container-chapter-reader")
+				.children()
+				.each((i, element) => {
+					tempPages.push(new Page(i, $(element).attr("src")));
+				});
+
+			return tempPages;
 		});
 	}
 }
