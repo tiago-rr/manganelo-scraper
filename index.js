@@ -343,10 +343,11 @@ class Scraper {
 			$(".content-homepage-item").each((i, manga) => {
 				var cover = $(manga).find($("img")).attr("src");
 				var title = $(manga).find($(".item-title")).text();
-				var url = $(manga).find($(".tooltip .item-img .hastool")).attr("href");
+				var url = $(manga).find($(".item-img")).attr("href");
 				var latestChapter = {
-					title: $(manga).find(".a-h .item-chapter").first().text(),
-					url: $(manga).find(".a-h .item-chapter").first().find("a").attr("href"),
+					title: $(manga).find(".item-chapter").first().find("a").attr("title"),
+					url: $(manga).find(".item-chapter").first().find("a").attr("href"),
+					time: $(manga).find(".item-chapter").first().find("i").text(),
 				};
 
 				mangas.push({title, url, cover, latestChapter});
