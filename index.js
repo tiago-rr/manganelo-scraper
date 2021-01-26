@@ -113,6 +113,8 @@ class Scraper {
 						temp_desc[i] = temp_desc[i].replace(/\n/g, "");
 					}
 
+					let temp_cover = $(".img-loading").attr("src");
+
 					//Scraping data for Chapters.
 					let chapters = [];
 					$(".row-content-chapter")
@@ -169,7 +171,9 @@ class Scraper {
 
 				//Creating Manga object.
 				let manga = new Manga(
+					link.split("/")[link.split("/").length - 1],
 					name,
+					temp_cover,
 					tempObj.Alternative,
 					tempObj.authors,
 					tempObj.Status,
@@ -298,6 +302,7 @@ class Scraper {
 
 			//Creating Manga object.
 			let manga = new Manga(
+				mangaURL.split("/")[mangaURL.split("/").length - 1],
 				name,
 				temp_cover,
 				tempObj.Alternative,
@@ -314,6 +319,10 @@ class Scraper {
 
 			return manga;
 		});
+	}
+
+	getMangaDataFromID(mangaId) {
+		return this.getMangaDataFromURL(`https://manganelo.com/manga/${mangaId}`);
 	}
 
 	completeChapterWithPages(chapterInfo) {
@@ -344,13 +353,14 @@ class Scraper {
 				var cover = $(manga).find($("img")).attr("src");
 				var title = $(manga).find($(".item-title")).text().replace(/\n/g, "");
 				var url = $(manga).find($(".item-img")).attr("href");
+				var id = url.split("/")[url.split("/").length - 1];
 				var latestChapter = {
-					title: $(manga).find(".item-chapter").first().find("a").attr("title"),
+					title: $(manga).find(".item-chapter").first().find("a").text(),
 					url: $(manga).find(".item-chapter").first().find("a").attr("href"),
 					time: $(manga).find(".item-chapter").first().find("i").text(),
 				};
 
-				mangas.push({title, url, cover, latestChapter});
+				mangas.push({id, title, url, cover, latestChapter});
 			});
 
 			return mangas;
