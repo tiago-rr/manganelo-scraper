@@ -241,6 +241,8 @@ class Scraper {
 				temp_desc[i] = temp_desc[i].replace(/\n/g, "");
 			}
 
+			let temp_cover = $(".img-loading").attr("src");
+
 			//Scraping data for Chapters.
 			let chapters = [];
 			$(".row-content-chapter")
@@ -297,6 +299,7 @@ class Scraper {
 			//Creating Manga object.
 			let manga = new Manga(
 				name,
+				temp_cover,
 				tempObj.Alternative,
 				tempObj.authors,
 				tempObj.Status,
@@ -313,19 +316,43 @@ class Scraper {
 		});
 	}
 
-	getChapterPages(chapterUrl) {
-		return axios.get(chapterUrl).then((res) => {
+	completeChapterWithPages(chapterInfo) {
+		var chapter = new Chapter(chapterInfo.title, chapterInfo.views, chapterInfo.upload_date, chapterInfo.url);
+
+		return axios.get(chapterUrl).then(async (res) => {
 			let messyData = [];
 			const $ = cheerio.load(res.data);
 
 			let tempPages = [];
-			$(".container-chapter-reader")
+			await $(".container-chapter-reader")
 				.children()
 				.each((i, element) => {
 					tempPages.push(new Page(i + 1, $(element).attr("src")));
 				});
 
-			return tempPages;
+			return chapter.fillPages(tempPages);
+		});
+	}
+
+	getLatestUpdates() {
+		return axios.get("https://manganelo.com/").then((res) => {
+			let messyData = [];
+			const $ = cheerio.load(res.data);
+
+			let mangas = [];
+			$(".content-homepage-item").each((i, manga) => {
+				var cover = $(manga).find($("img")).attr("src");
+				var title = $(manga).find($(".item-title")).text();
+				var url = $(manga).find($(".tooltip .item-img .hastool")).attr("href");
+				var latestChapter = {
+					title: $(manga).find(".a-h .item-chapter").first().text(),
+					url: $(manga).find(".a-h .item-chapter").first().find("a").attr("href"),
+				};
+
+				mangas.push({title, url, cover, latestChapter});
+			});
+
+			return mangas;
 		});
 	}
 }

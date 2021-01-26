@@ -7,6 +7,12 @@ class Chapter {
 
 		this.pages = [];
 	}
+
+	fillPages(pages) {
+		this.pages = pages.map((page, i) => new Page(i + 1, page));
+
+		return this;
+	}
 }
 
 module.exports = {Chapter};
