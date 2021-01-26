@@ -342,7 +342,7 @@ class Scraper {
 			let mangas = [];
 			$(".content-homepage-item").each((i, manga) => {
 				var cover = $(manga).find($("img")).attr("src");
-				var title = $(manga).find($(".item-title")).text().replace(/\n/g);
+				var title = $(manga).find($(".item-title")).text().replace(/\n/g, "");
 				var url = $(manga).find($(".item-img")).attr("href");
 				var latestChapter = {
 					title: $(manga).find(".item-chapter").first().find("a").attr("title"),
