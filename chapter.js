@@ -1,5 +1,8 @@
+const Page = require("./page").Page;
+
 class Chapter {
-	constructor(title, views, upload_date, url) {
+	constructor(title, views, upload_date, url, id = undefined) {
+		this.id = !id ? url.split("/").pop() : id;
 		this.title = title;
 		this.views = views;
 		this.upload_date = upload_date;

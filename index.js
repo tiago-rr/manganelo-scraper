@@ -1,7 +1,7 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 const Manga = require("./manga").Manga; //Custome Manga object;
-const Page = require("./page").Page;
+const Chapter = require("./chapter").Chapter;
 
 class Scraper {
 	//Cleaning up spaces in search. Return a string with all spaces replaced with '_'
@@ -171,7 +171,6 @@ class Scraper {
 
 				//Creating Manga object.
 				let manga = new Manga(
-					link.split("/")[link.split("/").length - 1],
 					name,
 					temp_cover,
 					tempObj.Alternative,
@@ -302,7 +301,6 @@ class Scraper {
 
 			//Creating Manga object.
 			let manga = new Manga(
-				mangaURL.split("/")[mangaURL.split("/").length - 1],
 				name,
 				temp_cover,
 				tempObj.Alternative,
@@ -326,9 +324,9 @@ class Scraper {
 	}
 
 	completeChapterWithPages(chapterInfo) {
-		var chapter = new Chapter(chapterInfo.title, chapterInfo.views, chapterInfo.upload_date, chapterInfo.url);
+		var chapter = new Chapter(chapterInfo.title, chapterInfo.views, chapterInfo.upload_date, chapterInfo.url, chapterInfo.id);
 
-		return axios.get(chapterUrl).then(async (res) => {
+		return axios.get(chapter.url).then(async (res) => {
 			let messyData = [];
 			const $ = cheerio.load(res.data);
 
@@ -336,7 +334,7 @@ class Scraper {
 			await $(".container-chapter-reader")
 				.children()
 				.each((i, element) => {
-					tempPages.push(new Page(i + 1, $(element).attr("src")));
+					tempPages.push($(element).attr("src"));
 				});
 
 			return chapter.fillPages(tempPages);
@@ -354,9 +352,12 @@ class Scraper {
 				var title = $(manga).find($(".item-title")).text().replace(/\n/g, "");
 				var url = $(manga).find($(".item-img")).attr("href");
 				var id = url.split("/")[url.split("/").length - 1];
+
+				var chapterUrl = $(manga).find(".item-chapter").first().find("a").attr("href");
 				var latestChapter = {
+					id: chapterUrl.split("/").pop(),
 					title: $(manga).find(".item-chapter").first().find("a").text(),
-					url: $(manga).find(".item-chapter").first().find("a").attr("href"),
+					url: chapterUrl,
 					time: $(manga).find(".item-chapter").first().find("i").text(),
 				};
 
