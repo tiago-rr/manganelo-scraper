@@ -8,7 +8,7 @@ class Chapter {
 		this.upload_date = upload_date;
 		this.url = url;
 
-		this.pages = [];
+		this.pages = undefined;
 	}
 
 	fillPages(pages) {
