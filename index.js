@@ -343,7 +343,6 @@ class Scraper {
 
 	getLatestUpdates() {
 		return axios.get("https://manganelo.com/").then((res) => {
-			let messyData = [];
 			const $ = cheerio.load(res.data);
 
 			let mangas = [];
@@ -354,6 +353,8 @@ class Scraper {
 				var id = url.split("/")[url.split("/").length - 1];
 
 				var chapterUrl = $(manga).find(".item-chapter").first().find("a").attr("href");
+				if (!chapterUrl) return;
+
 				var latestChapter = {
 					id: chapterUrl.split("/").pop(),
 					title: $(manga).find(".item-chapter").first().find("a").text(),
