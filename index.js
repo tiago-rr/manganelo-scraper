@@ -63,6 +63,7 @@ class Scraper {
 			for (let link of links) {
 				let messyData = [];
 				let name = null;
+				let temp_cover = undefined;
 				await this.getMangaPage(link).then((res) => {
 					const $ = cheerio.load(res.data);
 
@@ -113,7 +114,7 @@ class Scraper {
 						temp_desc[i] = temp_desc[i].replace(/\n/g, "");
 					}
 
-					let temp_cover = $(".img-loading").attr("src");
+					temp_cover = $(".img-loading").attr("src");
 
 					//Scraping data for Chapters.
 					let chapters = [];
@@ -319,12 +320,8 @@ class Scraper {
 		});
 	}
 
-	getMangaDataFromID(mangaId) {
-		return this.getMangaDataFromURL(`https://manganelo.com/manga/${mangaId}`);
-	}
-
 	completeChapterWithPages(chapterInfo) {
-		var chapter = new Chapter(chapterInfo.title, chapterInfo.views, chapterInfo.upload_date, chapterInfo.url, chapterInfo.id);
+		var chapter = new Chapter(chapterInfo.title, chapterInfo.views, chapterInfo.upload_date, chapterInfo.url);
 
 		return axios.get(chapter.url).then(async (res) => {
 			let messyData = [];
@@ -350,19 +347,17 @@ class Scraper {
 				var cover = $(manga).find($("img")).attr("src");
 				var title = $(manga).find($(".item-title")).text().replace(/\n/g, "");
 				var url = $(manga).find($(".item-img")).attr("href");
-				var id = url.split("/")[url.split("/").length - 1];
 
 				var chapterUrl = $(manga).find(".item-chapter").first().find("a").attr("href");
 				if (!chapterUrl) return;
 
 				var latestChapter = {
-					id: chapterUrl.split("/").pop(),
 					title: $(manga).find(".item-chapter").first().find("a").text(),
 					url: chapterUrl,
 					time: $(manga).find(".item-chapter").first().find("i").text(),
 				};
 
-				mangas.push({id, title, url, cover, latestChapter});
+				mangas.push({title, url, cover, latestChapter});
 			});
 
 			return mangas;

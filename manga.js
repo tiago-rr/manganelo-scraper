@@ -2,7 +2,6 @@ const Chapter = require("./chapter").Chapter;
 
 class Manga {
 	constructor(name, cover, alternative, authors, status, genres, updated, views, rating, description, url, chapters) {
-		this.id = url.split("/").pop();
 		this.name = name;
 		this.cover = cover;
 		this.alternative = alternative;
