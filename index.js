@@ -114,7 +114,7 @@ class Scraper {
 						temp_desc[i] = temp_desc[i].replace(/\n/g, "");
 					}
 
-					temp_cover = $(".img-loading").attr("src");
+					temp_cover = $(".info-image").find(".img-loading").attr("src");
 
 					//Scraping data for Chapters.
 					let chapters = [];
@@ -245,7 +245,7 @@ class Scraper {
 				temp_desc[i] = temp_desc[i].replace(/\n/g, "");
 			}
 
-			let temp_cover = $(".img-loading").attr("src");
+			let temp_cover = $(".info-image").find(".img-loading").attr("src");
 
 			//Scraping data for Chapters.
 			let chapters = [];
