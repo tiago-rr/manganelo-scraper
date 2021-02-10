@@ -338,6 +338,22 @@ class Scraper {
 		});
 	}
 
+	getPagesFromUrl(chapterUrl) {
+		return axios.get(chapterUrl).then(async (res) => {
+			let messyData = [];
+			const $ = cheerio.load(res.data);
+
+			let tempPages = [];
+			await $(".container-chapter-reader")
+				.children()
+				.each((i, element) => {
+					tempPages.push($(element).attr("src"));
+				});
+
+			return tempPages;
+		});
+	}
+
 	getLatestUpdates() {
 		return axios.get("https://manganelo.com/").then((res) => {
 			const $ = cheerio.load(res.data);
