@@ -14,7 +14,7 @@ class Manga {
 		this.description = description;
 		this.url = url;
 
-		this.chapters = chapters.map((chapter) => new Chapter(chapter.chapter, chapter.views, chapter.upload_date, chapter.url));
+		this.chapters = chapters.reverse().map((chapter) => new Chapter(chapter.chapter, chapter.views, chapter.upload_date, chapter.url));
 	}
 }
 

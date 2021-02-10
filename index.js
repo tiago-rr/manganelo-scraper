@@ -331,7 +331,7 @@ class Scraper {
 			await $(".container-chapter-reader")
 				.children()
 				.each((i, element) => {
-					tempPages.push($(element).attr("src"));
+					if (element.tagName == "img") tempPages.push($(element).attr("src"));
 				});
 
 			return chapter.fillPages(tempPages);
@@ -347,7 +347,7 @@ class Scraper {
 			await $(".container-chapter-reader")
 				.children()
 				.each((i, element) => {
-					tempPages.push($(element).attr("src"));
+					if (element.tagName == "img") tempPages.push($(element).attr("src"));
 				});
 
 			return tempPages;
